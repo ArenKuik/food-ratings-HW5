@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ place.name }} · Rate the Food{% endblock %}
+{% block content %}
+<p><a href="/">← All places</a></p>
+
+<h1>{{ place.name }}</h1>
+<p class="muted">{{ place.category }} · {{ place.location }}</p>
+
+{% if avg %}
+  <p style="font-size: 1.4em;"><span class="stars">★</span> {{ avg }}
+     <span class="muted">from {{ reviews|length }} review{{ "s" if reviews|length != 1 }}</span></p>
+
+  <div style="max-width: 500px;">
+    <canvas id="ratingsChart"></canvas>
+  </div>
+{% else %}
+  <p class="muted">No reviews yet. Be the first!</p>
+{% endif %}
+
+<h2>Reviews</h2>
+{% for r in reviews %}
+  <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+    <span class="stars">{{ "★" * r.rating }}{{ "☆" * (5 - r.rating) }}</span>
+    <strong>{{ r.username }}</strong>
+    <span class="muted">· {{ r.created_at[:10] }}</span>
+    <p style="margin: 6px 0 0;">{{ r.text }}</p>
+  </div>
+{% else %}
+  <p class="muted">Nothing here yet.</p>
+{% endfor %}
+
+{% if avg %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  new Chart(document.getElementById("ratingsChart"), {
+    type: "bar",
+    data: {
+      labels: ["1 ★", "2 ★", "3 ★", "4 ★", "5 ★"],
+      datasets: [{ label: "Number of reviews", data: {{ counts|tojson }},
+                   backgroundColor: "#e6a700" }]
+    },
+    options: { scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+               plugins: { legend: { display: false } } }
+  });
+</script>
+{% endif %}
+{% endblock %}
