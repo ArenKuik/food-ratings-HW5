@@ -58,7 +58,7 @@ def place(place_id):
         abort(404)  # place doesn't exist
 
     reviews = conn.execute("""
-        SELECT r.rating, r.text, r.created_at, u.username
+        SELECT r.rating, r.text, r.created_at, r.user_id, u.username
         FROM reviews r
         JOIN users u ON u.id = r.user_id
         WHERE r.place_id = ?
@@ -72,9 +72,69 @@ def place(place_id):
         counts[r["rating"] - 1] += 1
 
     avg = round(sum(r["rating"] for r in reviews) / len(reviews), 1) if reviews else None
+    reviewed = any(r["user_id"] == session.get("user_id") for r in reviews)
 
     return render_template("place.html", place=place, reviews=reviews,
-                           counts=counts, avg=avg)
+                           counts=counts, avg=avg, reviewed=reviewed)
+
+
+@app.route("/place/<int:place_id>/review", methods=["GET", "POST"])
+@login_required
+def review(place_id):
+    conn = get_db()
+    place = conn.execute("SELECT * FROM places WHERE id = ?", (place_id,)).fetchone()
+    if place is None:
+        conn.close()
+        abort(404)
+
+    # Each user gets one review per place, so this decides add vs. edit
+    existing = conn.execute(
+        "SELECT rating, text FROM reviews WHERE user_id = ? AND place_id = ?",
+        (session["user_id"], place_id),
+    ).fetchone()
+
+    rating = existing["rating"] if existing else None
+    text = existing["text"] if existing else ""
+
+    if request.method == "POST":
+        text = request.form.get("text", "").strip()
+        try:
+            rating = int(request.form.get("rating", ""))
+        except ValueError:
+            rating = None
+
+        errors = []
+        if rating not in (1, 2, 3, 4, 5):
+            errors.append("Pick a rating from 1 to 5 stars.")
+            rating = None
+        if not text:
+            errors.append("Write a few words about the place.")
+        elif len(text) > 1000:
+            errors.append("Keep your review under 1000 characters.")
+
+        if errors:
+            for e in errors:
+                flash(e)
+        else:
+            if existing:
+                conn.execute(
+                    "UPDATE reviews SET rating = ?, text = ? WHERE user_id = ? AND place_id = ?",
+                    (rating, text, session["user_id"], place_id),
+                )
+                flash("Your review was updated.")
+            else:
+                conn.execute(
+                    "INSERT INTO reviews (user_id, place_id, rating, text) VALUES (?, ?, ?, ?)",
+                    (session["user_id"], place_id, rating, text),
+                )
+                flash("Thanks for your review!")
+            conn.commit()
+            conn.close()
+            return redirect(url_for("place", place_id=place_id))
+
+    conn.close()
+    return render_template("review.html", place=place, rating=rating, text=text,
+                           editing=existing is not None)
 
 
 @app.route("/register", methods=["GET", "POST"])
