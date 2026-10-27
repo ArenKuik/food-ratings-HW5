@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Best places to eat near campus</h1>
+<table>
+  <tr><th>#</th><th>Place</th><th>Rating</th><th>Reviews</th></tr>
+  {% for p in places %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td>
+      <a href="/place/{{ p.id }}">{{ p.name }}</a><br>
+      <span class="muted">{{ p.category }} · {{ p.location }}</span>
+    </td>
+    <td>
+      {% if p.avg_rating %}
+        <span class="stars">★</span> {{ p.avg_rating }}
+      {% else %}
+        <span class="muted">No ratings yet</span>
+      {% endif %}
+    </td>
+    <td>{{ p.num_reviews }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

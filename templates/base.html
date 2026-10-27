@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Rate the Food{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 16px; color: #222; }
+    nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 20px; }
+    nav a { color: #b3261e; text-decoration: none; margin-left: 12px; }
+    .brand { font-weight: bold; font-size: 1.2em; margin-left: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #eee; }
+    .stars { color: #e6a700; }
+    .muted { color: #777; font-size: 0.9em; }
+    .flash { background: #fff4e5; border: 1px solid #f0c36d; padding: 10px; margin-bottom: 16px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/">🍜 Rate the Food</a>
+    <div><!-- login links go here later --></div>
+  </nav>
+
+  {% with messages = get_flashed_messages() %}
+    {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>
