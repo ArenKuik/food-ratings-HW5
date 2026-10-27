@@ -6,7 +6,7 @@
   <title>{% block title %}Rate the Food{% endblock %}</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 16px; color: #222; }
-    nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 20px; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 20px; }
     nav a { color: #b3261e; text-decoration: none; margin-left: 12px; }
     .brand { font-weight: bold; font-size: 1.2em; margin-left: 0; }
     table { width: 100%; border-collapse: collapse; }
@@ -19,7 +19,13 @@
     button, a.button { display: inline-block; text-decoration: none; margin-left: 0; background: #b3261e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
     form.review textarea { display: block; width: 100%; max-width: 500px; box-sizing: border-box; padding: 8px; margin: 4px 0 12px; border: 1px solid #ccc; border-radius: 6px; font: inherit; }
     .star-pick { border: none; padding: 0; margin: 0 0 12px; }
-    .star-pick label { margin-right: 12px; cursor: pointer; }
+    .star-pick label { display: inline-block; margin: 0 12px 8px 0; cursor: pointer; }
+    .review-text { margin: 6px 0 0; overflow-wrap: anywhere; }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.5em; }
+      th, td { padding: 8px 4px; }
+      nav a { margin-left: 8px; }
+    }
     .flash { background: #fff4e5; border: 1px solid #f0c36d; padding: 10px; margin-bottom: 16px; border-radius: 6px; }
   </style>
 </head>

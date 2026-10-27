@@ -22,21 +22,21 @@
   <p><a class="button" href="{{ url_for('review', place_id=place.id) }}">
     {{ "Edit your review" if reviewed else "Write a review" }}</a></p>
 {% else %}
-  <p class="muted"><a href="{{ url_for('login') }}">Log in</a> to leave a review.</p>
+  <p class="muted"><a href="{{ url_for('login', next=url_for('review', place_id=place.id)) }}">Log in</a> to leave a review.</p>
 {% endif %}
 {% for r in reviews %}
   <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
     <span class="stars">{{ "★" * r.rating }}{{ "☆" * (5 - r.rating) }}</span>
     <strong>{{ r.username }}</strong>{% if current_user and r.user_id == current_user.id %} <span class="muted">(you)</span>{% endif %}
     <span class="muted">· {{ r.created_at[:10] }}</span>
-    <p style="margin: 6px 0 0;">{{ r.text }}</p>
+    <p class="review-text">{{ r.text }}</p>
   </div>
 {% else %}
   <p class="muted">Nothing here yet.</p>
 {% endfor %}
 
 {% if avg %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   new Chart(document.getElementById("ratingsChart"), {
     type: "bar",

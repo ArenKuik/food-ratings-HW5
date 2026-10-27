@@ -13,7 +13,7 @@
     {% endfor %}
   </fieldset>
   <label>Your review
-    <textarea name="text" rows="5" maxlength="1000" required>{{ text }}</textarea>
+    <textarea name="text" rows="5" maxlength="{{ max_length }}" required>{{ text }}</textarea>
   </label>
   <button type="submit">{{ "Save changes" if editing else "Post review" }}</button>
 </form>
