@@ -5,7 +5,7 @@ ranking and open a place to see its average rating, a chart of how its ratings b
 down, and every review. Users can register, log in, and leave one review per place,
 which they can edit later.
 
-Live site: TBD
+Live site: https://food-ratings-307659313428.us-west1.run.app
 
 ## About the data
 
