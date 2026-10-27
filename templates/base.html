@@ -13,13 +13,25 @@
     th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #eee; }
     .stars { color: #e6a700; }
     .muted { color: #777; font-size: 0.9em; }
+    form.auth { max-width: 320px; }
+    form.auth label { display: block; margin-bottom: 12px; }
+    form.auth input { display: block; width: 100%; box-sizing: border-box; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font: inherit; }
+    button { background: #b3261e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
     .flash { background: #fff4e5; border: 1px solid #f0c36d; padding: 10px; margin-bottom: 16px; border-radius: 6px; }
   </style>
 </head>
 <body>
   <nav>
     <a class="brand" href="/">🍜 Rate the Food</a>
-    <div><!-- login links go here later --></div>
+    <div>
+      {% if current_user %}
+        <span class="muted">Hi, {{ current_user.username }}</span>
+        <a href="{{ url_for('logout') }}">Log out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Log in</a>
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
   </nav>
 
   {% with messages = get_flashed_messages() %}
